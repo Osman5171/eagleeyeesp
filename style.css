@@ -162,10 +162,26 @@ header {
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
+/* --- MATCH GRID DESIGN (Fixed to 3 Columns) --- */
 .match-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    /* ডেক্সটপে পাশাপাশি ৩টি কার্ড ফিক্সড */
+    grid-template-columns: repeat(3, 1fr); 
     gap: 20px;
+}
+
+/* ট্যাবলেটের জন্য ২ কলাম */
+@media (max-width: 1023px) and (min-width: 601px) {
+    .match-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* মোবাইলের জন্য ১ কলাম */
+@media (max-width: 600px) {
+    .match-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .match-card {
@@ -176,7 +192,10 @@ header {
     box-shadow: 0 4px 15px rgba(255, 102, 0, 0.1);
     position: relative;
     transition: transform 0.2s;
+    width: 100%; 
+    box-sizing: border-box;
 }
+
 .match-card:hover { transform: translateY(-5px); }
 
 /* Card Header */
@@ -525,4 +544,72 @@ header {
     color: #ff6600;
     font-weight: 600;
     text-decoration: none;
+}
+
+/* --- Folder Card Grid (2 Columns) --- */
+.folder-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* পাশাপাশি ২টি কার্ড ফিক্সড */
+    gap: 15px;
+    padding: 0 20px;
+    margin-top: 10px;
+}
+
+.folder-card {
+    height: 100px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    text-decoration: none;
+    color: white;
+    transition: 0.3s;
+    border: 1px solid #ff6600; /* অরেঞ্জ থিম বর্ডার */
+    position: relative;
+    overflow: hidden;
+}
+
+.folder-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px rgba(255, 102, 0, 0.3);
+}
+
+.folder-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.folder-icon img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+.folder-info h3 {
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+}
+
+.folder-info span {
+    font-size: 11px;
+    color: #ff6600;
+    font-weight: 600;
+}
+
+/* মোবাইলের জন্য রেসপন্সিভ */
+@media (max-width: 480px) {
+    .folder-grid {
+        grid-template-columns: 1fr; /* খুব ছোট স্ক্রিনে ১টি করে */
+    }
 }
