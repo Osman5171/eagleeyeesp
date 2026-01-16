@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - EagleEye ESP</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="auth-body">
+
+    <div class="auth-card">
+        <h2 class="auth-title">Register</h2>
+
+        <button class="btn-google">
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
+            Login with Google
+        </button>
+
+        <div class="divider">
+            <span>Or sign up with credentials</span>
+        </div>
+
+        <form action="register.php" method="POST">
+            
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" name="fullname" class="form-control" placeholder="Enter your name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="text" name="phone" class="form-control" placeholder="Enter phone number">
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control" placeholder="Enter email address" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Create password" required>
+            </div>
+
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input type="password" name="confirm_password" class="form-control" placeholder="Retype password" required>
+            </div>
+
+            <button type="submit" name="register_btn" class="btn-register-submit">Register</button>
+        </form>
+
+        <p class="auth-footer-text">
+            Already member? <a href="login.html">Login Now</a>
+        </p>
+    </div>
+
+</body>
+</html>
