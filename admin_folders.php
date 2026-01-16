@@ -9,7 +9,7 @@ if (!isset($_SESSION['admin_logged_in'])) { //
 
 // ফোল্ডার অ্যাড করা
 if (isset($_POST['add_folder'])) {
-    $name = mysqli_real_escape_with_string($conn, $_POST['folder_name']);
+    $name = mysqli_real_escape_string($conn, $_POST['folder_name']);
     $conn->query("INSERT INTO folders (name) VALUES ('$name')");
     echo "<script>alert('Folder Added!'); window.location.href='admin_folders.php';</script>";
 }
