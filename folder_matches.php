@@ -9,14 +9,17 @@ $folder_id = isset($_GET['folder_id']) ? intval($_GET['folder_id']) : 0;
 $f_res = $conn->query("SELECT name FROM folders WHERE id='$folder_id'");
 $folder_name = ($f_res->num_rows > 0) ? $f_res->fetch_assoc()['name'] : "Matches";
 
-// ব্যালেন্স বের করা
+// ইউজারের ব্যালেন্স বের করা
 $user_balance = 0;
 if (isset($_SESSION['user_email'])) {
     $email = $_SESSION['user_email'];
     $stmt = $conn->prepare("SELECT balance FROM users WHERE email=?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
-    $user_balance = $stmt->get_result()->fetch_assoc()['balance'];
+    $res = $stmt->get_result();
+    if ($res->num_rows > 0) {
+        $user_balance = $res->fetch_assoc()['balance'];
+    }
     $stmt->close();
 }
 ?>
@@ -41,7 +44,8 @@ if (isset($_SESSION['user_email'])) {
 
     <section class="match-grid" style="padding: 0 15px 80px;">
         <?php
-        $sql = "SELECT * FROM matches WHERE folder_id='$folder_id' AND status='Active' ORDER BY id DESC";
+        // আপডেট: টুর্নামেন্টগুলো আপনার সেট করা Level অনুযায়ী আসবে (ORDER BY level ASC)
+        $sql = "SELECT * FROM matches WHERE folder_id='$folder_id' AND status='Active' ORDER BY level ASC";
         $result = $conn->query($sql);
 
         if ($result && $result->num_rows > 0) {
@@ -97,11 +101,65 @@ if (isset($_SESSION['user_email'])) {
         ?>
     </section>
 
-    <script>
-        // (তোমার আগের দেওয়া টাইমার এবং মোডাল স্ক্রিপ্ট এখানে কপি করে দাও)
-    </script>
+    <div id="prizeModal" class="modal">
+        <div class="modal-content">
+            <h3 style="color:#ff6600; margin-bottom:15px;">🏆 Prize Pool</h3>
+            <div id="prizeListContent" style="text-align:left; font-weight:500; line-height:2;"></div>
+            <button class="close-modal" onclick="closeModal()">Close</button>
+        </div>
+    </div>
 
     <?php include 'menu.php'; ?>
+
+    <script>
+        // ১. প্রাইজ লিস্ট মোডাল ফাংশন
+        function showPrizeList(data) {
+            let content = "";
+            if(data && data.length > 0) {
+                data.forEach(item => {
+                    content += "• " + item + "<br>";
+                });
+            } else {
+                content = "No prize details available.";
+            }
+            document.getElementById('prizeListContent').innerHTML = content;
+            document.getElementById('prizeModal').style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById('prizeModal').style.display = "none";
+        }
+
+        // ২. লাইভ কাউন্টডাউন টাইমার ফাংশন
+        function updateTimers() {
+            const timers = document.querySelectorAll('.card-timer');
+            timers.forEach(timer => {
+                const startTimeStr = timer.getAttribute('data-start');
+                if (!startTimeStr) return;
+
+                const startTime = new Date(startTimeStr).getTime();
+                const now = new Date().getTime();
+                const distance = startTime - now;
+
+                if (distance < 0) {
+                    timer.innerHTML = "<span style='color:red; font-weight:bold;'>MATCH STARTED / ENDED</span>";
+                } else {
+                    const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((distance % (1000 * 60)) / 1000);
+                    
+                    let timeStr = "";
+                    if(d > 0) timeStr += d + "d : ";
+                    timeStr += h + "h : " + m + "m : " + s + "s";
+                    timer.innerHTML = timeStr;
+                }
+            });
+        }
+
+        setInterval(updateTimers, 1000);
+        updateTimers();
+    </script>
 
 </body>
 </html>

@@ -5,7 +5,7 @@ include 'db.php';
 // ১. পেজের নাম সেট করা (হেডার ও মেনুর জন্য)
 $page = 'home';
 
-// ২. স্লাইডার টাইমিং নিয়ে আসা
+// ২. স্লাইডার টাইমিং নিয়ে আসা
 $slider_speed = 3000; 
 $res_timer = $conn->query("SELECT key_value FROM settings WHERE key_name='slider_timer'");
 if ($res_timer && $res_timer->num_rows > 0) {
@@ -60,7 +60,7 @@ if (isset($_SESSION['user_email'])) {
                     echo '<div class="slide '.$active_class.'" style="background-image: url(\'uploads/slider/'.htmlspecialchars($s['image_path']).'\');">
                             <div class="slider-caption">
                                 <h3>Play & Win Unlimited Cash!</h3>
-                                <p>অ্যাডমিন প্যানেল থেকে নিয়ন্ত্রিত অফারসমূহ।</p>
+                                <p>অ্যাডমিন প্যানেল থেকে নিয়ন্ত্রিত অফারসমূহ।</p>
                             </div>
                           </div>';
                     $count++;
@@ -84,12 +84,13 @@ if (isset($_SESSION['user_email'])) {
     
     <section class="folder-grid">
         <?php
-        // ডাটাবেস থেকে সব ফোল্ডার নিয়ে আসা
-        $f_res = $conn->query("SELECT * FROM folders ORDER BY id DESC");
+        // আপডেট: ডাটাবেস থেকে ফোল্ডারগুলো Level (সিরিয়াল) অনুযায়ী আনা হচ্ছে
+        $f_res = $conn->query("SELECT * FROM folders ORDER BY level ASC");
+        
         if($f_res && $f_res->num_rows > 0) {
             while($f = $f_res->fetch_assoc()) {
                 $f_id = $f['id'];
-                // প্রতিটি ফোল্ডারে কতটি একটিভ ম্যাচ আছে তা গুনে নেওয়া
+                // প্রতিটি ফোল্ডারে কতটি একটিভ ম্যাচ আছে তা গুনে নেওয়া
                 $count_res = $conn->query("SELECT COUNT(*) as total FROM matches WHERE folder_id='$f_id' AND status='Active'");
                 $m_count = $count_res->fetch_assoc()['total'];
         ?>

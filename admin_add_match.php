@@ -25,6 +25,9 @@ if (isset($_POST['publish_match'])) {
     $prize = $_POST['total_prize'];
     $per_kill = $_POST['per_kill'];
     $total_slots = $_POST['total_slots'];
+    
+    // --- নতুন: লেভেল ইনপুট নেওয়া ---
+    $level = intval($_POST['level']); 
 
     // ডাইনামিক প্রাইজ পুল (JSON ফরম্যাটে সেভ হবে)
     $prize_pool = [];
@@ -37,8 +40,9 @@ if (isset($_POST['publish_match'])) {
     }
     $prize_details_json = json_encode($prize_pool);
 
-    $sql = "INSERT INTO matches (title, folder_id, category, match_type, map, time, start_time, entry_fee, prize, per_kill, total_slots, prize_details, status) 
-            VALUES ('$title', '$folder_id', '$category', '$match_type', '$maps', '$show_time', '$start_time', '$entry_fee', '$prize', '$per_kill', '$total_slots', '$prize_details_json', 'Active')";
+    // --- SQL কুয়েরিতে level যোগ করা হলো ---
+    $sql = "INSERT INTO matches (title, folder_id, category, match_type, map, time, start_time, entry_fee, prize, per_kill, total_slots, prize_details, level, status) 
+            VALUES ('$title', '$folder_id', '$category', '$match_type', '$maps', '$show_time', '$start_time', '$entry_fee', '$prize', '$per_kill', '$total_slots', '$prize_details_json', '$level', 'Active')";
 
     if ($conn->query($sql) === TRUE) {
         echo "<script>alert('New Match Published Successfully!'); window.location.href='admin_dashboard.php';</script>";
@@ -86,7 +90,8 @@ if (isset($_POST['publish_match'])) {
             <select name="folder_id" required>
                 <option value="">-- Select Folder --</option>
                 <?php
-                $f_res = $conn->query("SELECT * FROM folders");
+                // লেভেল অনুযায়ী ফোল্ডার দেখাবে
+                $f_res = $conn->query("SELECT * FROM folders ORDER BY level ASC");
                 while($f = $f_res->fetch_assoc()) {
                     echo "<option value='".$f['id']."'>".htmlspecialchars($f['name'])."</option>";
                 }
@@ -145,6 +150,9 @@ if (isset($_POST['publish_match'])) {
                     <input type="number" name="total_slots" placeholder="Ex: 48" required>
                 </div>
             </div>
+
+            <label style="color:#fbbf24;">Match Level / Serial (1 = First)</label>
+            <input type="number" name="level" placeholder="Ex: 1" value="1" required>
 
             <label>Prize Pool Breakdown</label>
             <div id="prize_fields">
